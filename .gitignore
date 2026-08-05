@@ -25,3 +25,6 @@ runs/
 
 # Ultralytics test görseli
 /bus.jpg
+
+# Dönüştürülmüş/eğitim verileri
+data/processed/
