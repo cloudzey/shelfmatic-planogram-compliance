@@ -1,0 +1,27 @@
+# Python sanal ortamı
+.venv/
+
+# Python geçici dosyaları
+__pycache__/
+*.py[cod]
+
+# Model dosyaları
+models/*.pt
+models/*.onnx
+
+# Üretilen sonuçlar
+outputs/
+
+# Ham veri seti
+data/raw/
+
+# Sistem ve editör dosyaları
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Ultralytics varsayılan çıktı klasörü
+runs/
+
+# Ultralytics test görseli
+/bus.jpg
