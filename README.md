@@ -93,3 +93,32 @@ Veriler sabit `42` random seed değeriyle aşağıdaki şekilde bölünmüştür
 Supervisely JSON etiketleri YOLO formatına dönüştürülmüş; görüntü-etiket
 eşleşmeleri, normalize koordinatlar ve kutular görsel olarak
 doğrulanmıştır.
+
+## Eğitim sağlık testi
+
+Veri ve eğitim hattını doğrulamak amacıyla YOLO11n modeliyle 1 epoch
+eğitim gerçekleştirilmiştir.
+
+### Eğitim ayarları
+
+- Model: YOLO11n
+- Epoch: 1
+- Görüntü boyutu: 640
+- Batch size: 1
+- Cihaz: CPU
+- İşlemci: Snapdragon X Elite
+- Süre: 1 dakika 11 saniye
+
+### İlk sonuçlar
+
+- Precision: 0.103
+- Recall: 0.418
+- mAP50: 0.0622
+- mAP50-95: 0.0258
+
+Bu aşamanın amacı yüksek model performansı elde etmek değil; veri setinin
+okunabildiğini, modelin eğitilebildiğini, validation işleminin
+tamamlandığını ve ağırlık dosyalarının üretildiğini doğrulamaktır.
+
+Eğitim sırasında dört adet yinelenen etiket Ultralytics tarafından
+otomatik olarak kaldırılmıştır.
