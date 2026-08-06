@@ -90,5 +90,5 @@ model.predict(
 
 print(
     f"\nTahmin görüntüleri kaydedildi: "
-    f"{output_directory / 'predictions_finetuned_1280'}"
+    f"{output_directory / 'predictions_hn_1280'}"
 )

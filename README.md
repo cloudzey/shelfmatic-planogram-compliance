@@ -122,3 +122,93 @@ tamamlandığını ve ağırlık dosyalarının üretildiğini doğrulamaktır.
 
 Eğitim sırasında dört adet yinelenen etiket Ultralytics tarafından
 otomatik olarak kaldırılmıştır.
+
+## Deney geçmişi
+
+960 pikselde fine-tune edilmiş korunan YOLO11n baseline, reddedilen
+hard-negative ablation, metrik farkları ve ret gerekçeleri
+[`docs/experiments.md`](docs/experiments.md) dosyasında kayıtlıdır. Kök
+dizindeki `best.pt` kabul edilen baseline checkpointidir. Hard-negative
+checkpointi ve tanı kayıtları yalnızca tarihsel ablation kaydıdır; yeni
+eğitimlerde başlangıç ağırlığı olarak kullanılmamalıdır.
+
+## Tekrarlanabilir YOLO11s / YOLO26s karşılaştırması
+
+Karşılaştırma altyapısı, yerel olarak çıkarılmış SKU-110K veri setinden aynı
+train/validation/test alt kümesini deterministik biçimde üretir ve iki modeli
+tek ortak protokolle çalıştırır. Scriptler veri setini indirmez. SKU-110K kök
+dizini şu yapıda olmalıdır:
+
+```text
+data/raw/SKU-110K/
+├── annotations/
+│   ├── annotations_train.csv
+│   ├── annotations_val.csv
+│   └── annotations_test.csv
+└── images/
+```
+
+Ortak seed, alt küme boyutları, görüntü boyutu, epoch, batch, optimizer ve
+augmentation ayarları `configs/model_comparison.yaml` içindedir. Varsayılan
+protokol seed 42 ile train/val/test için 1000/100/300 görüntü, 960 piksel, 50
+epoch ve train batch 4 kullanır. Göreli yollar repo kökünden çözülür.
+
+### 1. Alt kümeyi doğrula ve hazırla
+
+Önce yalnızca kaynak düzenini ve seçimi kontrol et:
+
+```bash
+python src/prepare_sku110k_subset.py --source data/raw/SKU-110K --config configs/model_comparison.yaml --dry-run
+```
+
+Ardından aynı komutu `--dry-run` olmadan çalıştır:
+
+```bash
+python src/prepare_sku110k_subset.py --source data/raw/SKU-110K --config configs/model_comparison.yaml
+```
+
+Bu adım platformdan bağımsız `data.yaml` ile seçilen dosya, split, kutu ve
+SHA-256 kayıtlarını içeren `manifest.json` üretir. Var olan çıktı klasörünün
+üzerine yazılmaz. Aynı disk bölümünde veri kopyalamamak için isteğe bağlı
+`--copy-mode hardlink` kullanılabilir.
+
+### 2. Eğitim öncesi dry-run
+
+```bash
+python src/run_model_comparison.py --config configs/model_comparison.yaml --dry-run
+```
+
+Dry-run; configi, manifesti, split çakışmalarını, dosya sayılarını, kurulu
+Ultralytics model desteğini ve çıktı klasörlerini doğrular. Model yüklemez,
+ağırlık indirmez, eğitim veya değerlendirme başlatmaz. Görüntü ve etiket
+hashlerini de yeniden hesaplamak için `--verify-hashes` eklenebilir; gerçek
+eğitim öncesinde bu hash kontrolü otomatik olarak yapılır.
+
+### 3. Modelleri aynı protokolle eğit ve değerlendir
+
+Koşular ayrı ayrı başlatılabilir:
+
+```bash
+python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo11s
+python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo26s
+```
+
+Ya da temiz bir çıktı kökünde ikisi sıralı çalıştırılabilir:
+
+```bash
+python src/run_model_comparison.py --config configs/model_comparison.yaml --model all
+```
+
+Varsayılan gerçek ağırlık adları `yolo11s.pt` ve `yolo26s.pt` olup dosyalar
+ilk gerçek eğitimde `models/` altına alınır. Önceden indirilmiş doğrulanmış
+ağırlıklar komut satırından verilebilir:
+
+```bash
+python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo26s --yolo26-weights /path/to/yolo26s.pt
+```
+
+Cihaz ayarı iki model için aynı tutulmalıdır; gerektiğinde her iki komuta da
+örneğin `--device cpu` eklenebilir. Her modelin koşu klasörü mevcutsa script
+üzerine yazmak yerine hata verir. Sonuçlar model klasörlerindeki `result.csv`
+ve `result.json` yanında karşılaştırma kökünde `comparison_results.csv` ve
+`comparison_results.json` olarak yan yana kaydedilir.

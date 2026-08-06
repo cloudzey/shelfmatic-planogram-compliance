@@ -1,0 +1,66 @@
+version: 1
+
+experiment:
+  name: sku110k_yolo11s_vs_yolo26s_seed42
+  seed: 42
+
+dataset:
+  yaml: data/processed/sku110k_subset_seed42/data.yaml
+  manifest: data/processed/sku110k_subset_seed42/manifest.json
+  subset:
+    selection_method: sha256_rank_v1
+    train: 1000
+    val: 100
+    test: 300
+
+models:
+  yolo11s:
+    weights: models/yolo11s.pt
+  yolo26s:
+    weights: models/yolo26s.pt
+
+output_root: outputs/model_comparison/sku110k_seed42
+
+training:
+  epochs: 50
+  imgsz: 960
+  batch: 4
+  device: 0
+  workers: 0
+  max_det: 1000
+  patience: 10
+  optimizer: AdamW
+  lr0: 0.001
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  cos_lr: false
+  close_mosaic: 10
+  amp: true
+  cache: false
+  plots: true
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.0
+  cutmix: 0.0
+  copy_paste: 0.0
+
+evaluation:
+  split: test
+  batch: 1
+  workers: 0
+  max_det: 1000
+  iou: 0.7
+  plots: true
