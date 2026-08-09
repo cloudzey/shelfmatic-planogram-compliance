@@ -1,0 +1,36 @@
+{
+  "selected_model": "yolo11s",
+  "selection_scope": "Same dataset, seed, training configuration and test configuration",
+  "reason": "YOLO11s achieved higher precision, recall, mAP50, mAP75 and mAP50-95.",
+  "results": [
+    {
+      "model": "yolo26s",
+      "precision": 0.8826397161460391,
+      "recall": 0.8306563115436256,
+      "mAP50": 0.903604876729824,
+      "mAP75": 0.5918826809781492,
+      "mAP50-95": 0.5400870741198797,
+      "preprocess_ms": 0.8642739166801524,
+      "inference_ms": 7.545662426664421,
+      "postprocess_ms": 9.540619166679486
+    },
+    {
+      "model": "yolo11s",
+      "precision": 0.889042249791759,
+      "recall": 0.8420573302065072,
+      "mAP50": 0.9068291866239222,
+      "mAP75": 0.6029975974017168,
+      "mAP50-95": 0.5474406243481125,
+      "preprocess_ms": 1.022192743348569,
+      "inference_ms": 7.153427999992346,
+      "postprocess_ms": 16.005402466671512
+    }
+  ],
+  "delta_yolo11s_minus_yolo26s": {
+    "precision": 0.0064025336457199655,
+    "recall": 0.011401018662881568,
+    "mAP50": 0.003224309894098165,
+    "mAP75": 0.011114916423567545,
+    "mAP50-95": 0.007353550228232808
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "selected_model": "yolo11s",
+  "locked_confidence": 0.33,
+  "threshold_selected_using": "validation set and 20 hard-negative images",
+  "threshold_changed_after_test": false,
+  "test_operating_point": {
+    "precision": 0.8677276218348672,
+    "recall": 0.8590867694269256,
+    "f1": 0.8633855190306852
+  },
+  "test_metrics": {
+    "metrics/precision(B)": 0.889042249791759,
+    "metrics/recall(B)": 0.8420573302065072,
+    "metrics/mAP50(B)": 0.9068291866239222,
+    "metrics/mAP50-95(B)": 0.5474406243481125,
+    "fitness": 0.5474406243481125,
+    "metrics/mAP75(B)": 0.6029975974017168
+  },
+  "speed_ms_per_image": {
+    "preprocess": 1.0140376933244017,
+    "inference": 7.456105689955924,
+    "loss": 0.2826308300003196,
+    "postprocess": 12.532818993313413
+  }
+}

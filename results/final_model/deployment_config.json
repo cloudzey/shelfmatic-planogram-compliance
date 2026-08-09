@@ -1,0 +1,13 @@
+{
+  "selected_model": "yolo11s",
+  "imgsz": 640,
+  "confidence": 0.33,
+  "iou": 0.7,
+  "test_precision": 0.867728,
+  "test_recall": 0.859087,
+  "test_f1": 0.863386,
+  "test_mAP50": 0.906829,
+  "test_mAP75": 0.602998,
+  "test_mAP50_95": 0.547441,
+  "inference_ms_per_image": 7.456
+}
