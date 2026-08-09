@@ -1,0 +1,19 @@
+schema_version: 1
+
+model:
+  path: best.pt
+  family: yolo11s
+  class_name: object
+
+inference:
+  imgsz: 640
+  confidence: 0.33
+  iou: 0.70
+  max_det: 1000
+
+selection:
+  dataset: SKU-110K deterministic subset
+  seed: 42
+  validation_images: 100
+  hard_negative_images: 20
+  test_images: 300

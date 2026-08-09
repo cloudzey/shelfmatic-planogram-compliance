@@ -1,12 +1,12 @@
 # Deney kayıtları
 
-## Korunan YOLO11n baseline ve reddedilen hard-negative ablation
+## Tarihsel YOLO11n baseline ve reddedilen hard-negative ablation
 
 Bu tablo, aynı HITL Supermarket Shelves doğrulama bölümü üzerindeki en iyi
-epoch metriklerini gösterir. Kök dizindeki `best.pt`, 960 pikselde fine-tune
-edilmiş iyi YOLO11n baseline checkpointidir ve korunmalıdır. Hard-negative
-checkpointi yalnızca reddedilmiş bir ablation kaydıdır; baseline veya yeni bir
-eğitimin başlangıç ağırlığı değildir.
+epoch metriklerini gösterir. Bu YOLO11n baseline artık final model değildir;
+metrikleri ve tanı artefaktları deney geçmişini korumak için saklanır.
+Hard-negative checkpointi yalnızca reddedilmiş bir ablation kaydıdır ve yeni
+bir eğitimin başlangıç ağırlığı değildir.
 
 | Deney | Durum | En iyi epoch | Precision | Recall | mAP50 | mAP50–95 |
 |---|---|---:|---:|---:|---:|---:|
@@ -55,12 +55,12 @@ Ortak ayarlar `configs/model_comparison.yaml` dosyasındadır:
 | Seed | 42 |
 | Alt küme | train 1000 / val 100 / test 300 |
 | Seçim | `sha256_rank_v1` |
-| Görüntü boyutu | 960 |
-| Epoch | 50 |
-| Train batch | 4 |
-| Test batch | 1 |
+| Görüntü boyutu | 640 |
+| Epoch | 30 |
+| Train batch | 8 |
+| Test batch | 8 |
 | Optimizer | AdamW |
-| Workers | 0 |
+| Workers | 2 |
 | Çıktı politikası | Model başına ayrı klasör, mevcut klasörün üzerine yazma yok |
 
 `src/prepare_sku110k_subset.py`, SKU-110K'nın resmî
@@ -74,7 +74,7 @@ sayılarını, görüntü/etiket hashlerini ve kaynak annotation hashlerini kayd
 `result.csv` dosyalarına, yan yana görünümü de `comparison_results.json` ve
 `comparison_results.csv` dosyalarına yazar:
 
-- Precision, Recall, mAP50 ve mAP50–95
+- Precision, Recall, mAP50, mAP75 ve mAP50–95
 - fine-tune edilmiş en iyi `.pt` dosyasının bayt/MiB boyutu
 - toplam ve trainable parametre sayısı
 - Ultralytics test doğrulamasının görüntü başına inference süresi
@@ -99,3 +99,49 @@ Bu protokol kontrollü bir mimari karşılaştırmadır: augmentation ve optimiz
 ayarları iki model için aynıdır. Model ailesine özel hiperparametre araması
 yapılmadığı için sonuçlar her mimarinin ulaşabileceği mutlak en iyi skor olarak
 yorumlanmamalıdır.
+
+## Final model seçimi
+
+İki model seed 42, aynı 1000/100/300 splitleri ve aynı eğitim ayarlarıyla 30
+epoch çalıştırılmıştır. Test sonuçları:
+
+| Model | Precision | Recall | mAP50 | mAP75 | mAP50–95 | Inference (ms/görsel) |
+|---|---:|---:|---:|---:|---:|---:|
+| YOLO26s | 0.882640 | 0.830656 | 0.903605 | 0.591883 | 0.540087 | 7.546 |
+| YOLO11s | **0.889042** | **0.842057** | **0.906829** | **0.602998** | **0.547441** | **7.153** |
+
+YOLO11s; Precision, Recall, mAP50, mAP75 ve mAP50–95 değerlerinin tamamında
+YOLO26s'ten daha yüksek sonuç verdiği için seçildi. Kök dizindeki `best.pt`
+bu YOLO11s checkpointidir.
+
+## Confidence seçimi ve kilitli test
+
+Confidence eşiği yalnızca 100 görüntülük validation bölümü ve elle onaylanmış
+20 hard-negative görüntü kullanılarak seçildi. Validation F1 eğrisinin ham
+optimumu `0.33033` ve F1 değeri `0.84425` oldu. Raporlama/deployment değeri
+`0.33` olarak kilitlendi:
+
+| Confidence | Val Precision | Val Recall | Val F1 | Hard-negative FP görsel | FP kutu |
+|---:|---:|---:|---:|---:|---:|
+| 0.33 | 0.858835 | 0.830063 | 0.844204 | 0/20 | 0 |
+
+Eşik seçildikten sonra 300 görüntülük test bölümü yalnızca bir kez final
+değerlendirme için kullanıldı; test sonucuna bakılarak eşik değiştirilmedi.
+
+| Metrik | Kilitli test sonucu |
+|---|---:|
+| Confidence | 0.33 |
+| Precision | 0.867728 |
+| Recall | 0.859087 |
+| F1 | 0.863386 |
+| mAP50 | 0.906829 |
+| mAP75 | 0.602998 |
+| mAP50–95 | 0.547441 |
+| Inference | 7.456 ms/görüntü |
+
+Kaynak metin artefaktları `results/final_model/` altındadır. Seçilen modelin
+SHA-256 değeri:
+
+```text
+f0a0028b0f7e6ce4b597d9b422b4fa6003c5a08aec194942e2a6aedab08d8304  best.pt
+```

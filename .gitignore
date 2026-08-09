@@ -6,6 +6,7 @@ __pycache__/
 *.py[cod]
 
 # Model dosyaları
+# Kök best.pt seçilmiş deployment checkpointi olarak sürümlenir.
 models/*.pt
 models/*.onnx
 
@@ -33,3 +34,5 @@ data/processed/
 .ipynb_checkpoints/
 *_artifacts.zip
 /kaggle_outputs/
+/shelfmatic_final_results.zip
+/shelfmatic_model_comparison_export.zip
