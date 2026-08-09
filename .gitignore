@@ -28,3 +28,8 @@ runs/
 
 # Dönüştürülmüş/eğitim verileri
 data/processed/
+
+# Jupyter/Kaggle tarafından üretilen dosyalar
+.ipynb_checkpoints/
+*_artifacts.zip
+/kaggle_outputs/

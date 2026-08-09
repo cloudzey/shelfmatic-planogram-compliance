@@ -189,8 +189,8 @@ eğitim öncesinde bu hash kontrolü otomatik olarak yapılır.
 Koşular ayrı ayrı başlatılabilir:
 
 ```bash
-python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo11s
 python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo26s
+python src/run_model_comparison.py --config configs/model_comparison.yaml --model yolo11s
 ```
 
 Ya da temiz bir çıktı kökünde ikisi sıralı çalıştırılabilir:
@@ -212,3 +212,24 @@ Cihaz ayarı iki model için aynı tutulmalıdır; gerektiğinde her iki komuta 
 üzerine yazmak yerine hata verir. Sonuçlar model klasörlerindeki `result.csv`
 ve `result.json` yanında karşılaştırma kökünde `comparison_results.csv` ve
 `comparison_results.json` olarak yan yana kaydedilir.
+
+## Kaggle üzerinde çalıştırma
+
+[`notebooks/kaggle_model_comparison.ipynb`](notebooks/kaggle_model_comparison.ipynb)
+Kaggle GPU ortamı için sıralı ve güvenlik kilitli akışı içerir. Kaggle'da
+Internet'i açın, Accelerator olarak NVIDIA GPU seçin ve gerekli
+`annotations/*.csv` ile `images/` yapısını içeren SKU-110K veri setini input
+olarak bağlayın. Hücreleri sırayla çalıştırın; notebook tek geçerli veri kökünü
+bulur, splitleri doğrular, alt kümeyi `copy` modunda hazırlar ve hash doğrulamalı
+dry-run yapar.
+
+Eğitim varsayılan olarak `START_TRAINING = False` ile kapalıdır. İlk koşuda
+`MODEL = "yolo26s"` bırakılmalı; kontroller incelendikten sonra eğitim bilinçli
+olarak açılmalıdır. YOLO11s daha sonra aynı config ve ayrı çıktı klasörüyle
+çalıştırılabilir. Configteki seed, split, görüntü boyutu, epoch, batch ve
+augmentation değerleri iki model için değiştirilmemelidir.
+
+SKU-110K'nin [orijinal proje sayfası](https://github.com/eg4000/SKU110K_CVPR19)
+veri setinin yalnızca akademik ve ticari olmayan amaçlarla kullanılabileceğini
+belirtir. Veri setini, hazırlanan alt kümeyi, model ağırlıklarını veya Kaggle'ın
+ürettiği büyük ZIP/çıktı dosyalarını GitHub reposuna eklemeyin.
