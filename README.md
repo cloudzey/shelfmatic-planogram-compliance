@@ -26,8 +26,41 @@ hedeflenmektedir.
 
 ## Proje durumu
 
-Proje ortamı hazırlanmış, YOLO kurulumu tamamlanmış ve genel amaçlı
-YOLO11n modeliyle ilk raf baseline deneyi gerçekleştirilmiştir.
+Deterministik SKU-110K alt kümesinde aynı protokolle eğitilen YOLO11s ve
+YOLO26s karşılaştırılmıştır. YOLO11s bütün doğruluk metriklerinde daha iyi
+sonuç verdiği için final model olarak seçilmiş, kullanım confidence eşiği
+validation ve hard-negative sonuçlarıyla `0.33` olarak kilitlenmiştir.
+
+## Final model
+
+Kök dizindeki `best.pt`, seçilen YOLO11s checkpointidir. SHA-256 değeri:
+
+```text
+f0a0028b0f7e6ce4b597d9b422b4fa6003c5a08aec194942e2a6aedab08d8304
+```
+
+Kilitli `0.33` confidence eşiğiyle 300 görüntülük test bölümündeki sonuçlar:
+
+| Metrik | Değer |
+|---|---:|
+| Precision | 0.867728 |
+| Recall | 0.859087 |
+| F1 | 0.863386 |
+| mAP50 | 0.906829 |
+| mAP75 | 0.602998 |
+| mAP50–95 | 0.547441 |
+| Inference | 7.456 ms/görüntü |
+
+Üretim ayarları `configs/deployment.yaml` içinde tutulur: `imgsz=640`,
+`confidence=0.33`, `iou=0.70` ve `max_det=1000`. Örnek raf görselini final
+modelle çalıştırmak için:
+
+```bash
+python src/predict_shelf.py data/samples/supermarket_shelves.jpg
+```
+
+İşaretlenmiş görsel, YOLO etiketleri ve `prediction_summary.json` varsayılan
+olarak `outputs/final_predictions/` altına yazılır.
 
 ## Test görseli kaynağı
 
@@ -125,12 +158,12 @@ otomatik olarak kaldırılmıştır.
 
 ## Deney geçmişi
 
-960 pikselde fine-tune edilmiş korunan YOLO11n baseline, reddedilen
+960 pikselde fine-tune edilmiş tarihsel YOLO11n baseline, reddedilen
 hard-negative ablation, metrik farkları ve ret gerekçeleri
 [`docs/experiments.md`](docs/experiments.md) dosyasında kayıtlıdır. Kök
-dizindeki `best.pt` kabul edilen baseline checkpointidir. Hard-negative
-checkpointi ve tanı kayıtları yalnızca tarihsel ablation kaydıdır; yeni
-eğitimlerde başlangıç ağırlığı olarak kullanılmamalıdır.
+dizindeki `best.pt` artık seçilen final YOLO11s checkpointidir. Eski
+hard-negative checkpointi ve tanı kayıtları yalnızca tarihsel ablation
+kaydıdır; yeni eğitimlerde başlangıç ağırlığı olarak kullanılmamalıdır.
 
 ## Tekrarlanabilir YOLO11s / YOLO26s karşılaştırması
 
@@ -149,9 +182,9 @@ data/raw/SKU-110K/
 ```
 
 Ortak seed, alt küme boyutları, görüntü boyutu, epoch, batch, optimizer ve
-augmentation ayarları `configs/model_comparison.yaml` içindedir. Varsayılan
-protokol seed 42 ile train/val/test için 1000/100/300 görüntü, 960 piksel, 50
-epoch ve train batch 4 kullanır. Göreli yollar repo kökünden çözülür.
+augmentation ayarları `configs/model_comparison.yaml` içindedir. Final
+protokol seed 42 ile train/val/test için 1000/100/300 görüntü, 640 piksel, 30
+epoch ve batch 8 kullanır. Göreli yollar repo kökünden çözülür.
 
 ### 1. Alt kümeyi doğrula ve hazırla
 
@@ -213,6 +246,10 @@ Cihaz ayarı iki model için aynı tutulmalıdır; gerektiğinde her iki komuta 
 ve `result.json` yanında karşılaştırma kökünde `comparison_results.csv` ve
 `comparison_results.json` olarak yan yana kaydedilir.
 
+Final karşılaştırma, confidence taraması ve kilitli test raporlarının küçük
+metin artefaktları `results/final_model/` altında sürümlenir. Büyük Kaggle ZIP
+paketleri ve ara görseller repoya eklenmez.
+
 ## Kaggle üzerinde çalıştırma
 
 [`notebooks/kaggle_model_comparison.ipynb`](notebooks/kaggle_model_comparison.ipynb)
@@ -231,5 +268,6 @@ augmentation değerleri iki model için değiştirilmemelidir.
 
 SKU-110K'nin [orijinal proje sayfası](https://github.com/eg4000/SKU110K_CVPR19)
 veri setinin yalnızca akademik ve ticari olmayan amaçlarla kullanılabileceğini
-belirtir. Veri setini, hazırlanan alt kümeyi, model ağırlıklarını veya Kaggle'ın
-ürettiği büyük ZIP/çıktı dosyalarını GitHub reposuna eklemeyin.
+belirtir. Veri setini, hazırlanan alt kümeyi, ara model ağırlıklarını veya
+Kaggle'ın ürettiği büyük ZIP/çıktı dosyalarını GitHub reposuna eklemeyin. Tek
+istisna, sürüm takibi yapılan seçilmiş kök `best.pt` checkpointidir.
