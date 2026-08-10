@@ -160,3 +160,11 @@ kutu üretti. Bu kontrol, eşik seçiminde kullanılan 20 hard-negative görünt
 `0` yanlış pozitif sonucunu değiştirmez; farklı sahne dağılımlarında genelleme
 sınırı bulunduğunu gösterir. Saha kullanımında raf-görüntüsü doğrulaması ve
 daha çeşitli background-only örneklerle ek değerlendirme önerilir.
+
+Streamlit demosu daha farklı kategori, ürün ölçeği ve kamera açılarını
+gösterebilmek için eğitim verisinden bağımsız 20 lisanslı Wikimedia Commons raf
+görseliyle genişletildi. Final deployment ayarlarıyla 20/20 dosyada inference
+tamamlandı ve toplam 1.641 kutu üretildi. Bu görseller ground-truth etiketli
+olmadığından sonuçlar performans metriği olarak yorumlanmamalıdır; nitel sanity
+kontrolü ve görsel başına tahmin özetleri
+[`gallery_sanity.md`](gallery_sanity.md) içinde kayıtlıdır.

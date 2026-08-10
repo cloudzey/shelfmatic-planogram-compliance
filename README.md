@@ -75,10 +75,11 @@ python src/predict_shelf.py data/samples/soft_drink_shelf.jpg --show-details
 
 ## İnteraktif demo
 
-Streamlit arayüzü örnek raf görselini veya yüklenen JPG/PNG dosyasını final
-YOLO11s modeliyle işler. Arayüz; kutulu sonucu, ürün sayısını, confidence
-özetini ve işlem süresini gösterir. İşaretlenmiş JPG ile ayrıntılı JSON ve CSV
-çıktıları indirilebilir.
+Streamlit arayüzü 20 lisanslı örnek raf görselinden seçilen birini veya
+yüklenen JPG/PNG dosyasını final YOLO11s modeliyle işler. Arayüz; kutulu sonucu,
+ürün sayısını, confidence özetini ve işlem süresini gösterir. İşaretlenmiş JPG
+ile ayrıntılı JSON ve CSV çıktıları indirilebilir. Seçilen demo görselinin
+üretici ve lisans bağlantıları arayüzde gösterilir.
 
 Kurulum ve çalıştırma:
 
@@ -98,23 +99,31 @@ okur.
 
 ![YOLO11s temiz raf tespiti](docs/demo/yolo11s/soft_drink_shelf.jpg)
 
-Bu örnekte model 49 ürün yüzü tespit etmiştir. Ortalama confidence `0.790237`,
-minimum confidence `0.334920` ve maksimum confidence `0.871103` olmuştur.
-Görsel yalnızca tek bir lisanslı demo kaynağıdır; teslim öncesinde gerçek saha
-fotoğraflarıyla ayrıca doğrulama yapılmalıdır.
+Varsayılan örnekte model 49 ürün yüzü tespit etmiştir. Ortalama confidence
+`0.790237`, minimum confidence `0.334920` ve maksimum confidence `0.871103`
+olmuştur. Galerideki 20 görselin tamamı final ayarlarla çalıştırılmış ve
+çıktılar nitel olarak kontrol edilmiştir. Görsel başına sonuçlar
+[`docs/gallery_sanity.md`](docs/gallery_sanity.md) dosyasında kayıtlıdır.
+Galerideki görseller ground-truth etiketli olmadığı için bu çalışma bir
+doğruluk metriği değil deployment sanity kontrolüdür. Teslim öncesinde gerçek
+saha fotoğraflarıyla ayrıca doğrulama yapılmalıdır.
 
 ## Görsel kaynakları
 
-- Güncel demo: “Soft drink shelf”, SMC, Wikimedia Commons
-  - Lisans: Public domain
-  - Kaynak: https://commons.wikimedia.org/wiki/File:Soft_drink_shelf.JPG
-- Tarihsel baseline: “Supermarket shelves”, Frankie Fouganthin, Wikimedia Commons
-  - Lisans: CC BY-SA 4.0
-  - Kaynak: https://commons.wikimedia.org/wiki/File:Supermarket_shelves.jpg
+20 görsellik Streamlit galerisinin üretici, lisans ve kaynak bağlantıları
+[`data/samples/ATTRIBUTIONS.md`](data/samples/ATTRIBUTIONS.md) dosyasında,
+uygulamanın okuduğu makinece kullanılabilir kayıtlar ise
+[`data/samples/gallery.json`](data/samples/gallery.json) içinde tutulur.
+Galeri görselleri eğitim verisinden bağımsız Wikimedia Commons kaynaklarıdır.
+
+Tarihsel baseline görseli “Supermarket shelves”, Frankie Fouganthin tarafından
+üretilmiş ve CC BY-SA 4.0 ile yayımlanmıştır. Kaynak:
+https://commons.wikimedia.org/wiki/File:Supermarket_shelves.jpg
 
 Tarihsel baseline görseli, eski deneyin yeniden üretilebilmesi için
-`data/samples/legacy_supermarket_shelves.jpg` adıyla korunur. Streamlit demo ve
-final tahmin örneği daha önden çekilmiş `soft_drink_shelf.jpg` görselini kullanır.
+`data/samples/legacy_supermarket_shelves.jpg` adıyla korunur. Streamlit demo
+varsayılan olarak daha önden çekilmiş `soft_drink_shelf.jpg` görselini açar;
+yan menüden diğer 19 örnek seçilebilir.
 
 ## İlk baseline deneyi
 
