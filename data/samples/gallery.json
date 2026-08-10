@@ -1,0 +1,222 @@
+[
+  {
+    "id": "soft-drink-shelf",
+    "label": "İçecek rafı — önden görünüm",
+    "category": "İçecek",
+    "path": "data/samples/soft_drink_shelf.jpg",
+    "source_title": "Soft drink shelf",
+    "creator": "SMC",
+    "license": "Public domain",
+    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Soft_drink_shelf.JPG"
+  },
+  {
+    "id": "sauces-wall",
+    "label": "Sos ve konserve rafı",
+    "category": "Paketli gıda",
+    "path": "data/samples/gallery/sauces_wall.jpg",
+    "source_title": "Faced products on a supermarket shelf",
+    "creator": "Amnesiac86",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Faced_products_on_a_supermarket_shelf.JPG"
+  },
+  {
+    "id": "energy-drinks",
+    "label": "Enerji içeceği rafı",
+    "category": "İçecek",
+    "path": "data/samples/gallery/energy_drinks.jpg",
+    "source_title": "Energydrinks",
+    "creator": "AlienFood",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Energydrinks.jpg"
+  },
+  {
+    "id": "candy-display",
+    "label": "Şekerleme standı",
+    "category": "Atıştırmalık",
+    "path": "data/samples/gallery/candy_display.jpg",
+    "source_title": "Candy products displayed in a supermarket",
+    "creator": "Nielsoncaetanosalmeron",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Candy_products_displayed_in_a_supermarket.jpg"
+  },
+  {
+    "id": "grains-and-pasta",
+    "label": "Bakliyat ve makarna rafı",
+    "category": "Paketli gıda",
+    "path": "data/samples/gallery/grains_and_pasta.jpg",
+    "source_title": "Grocery store shelf in Russia",
+    "creator": "Alexander Davronov",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Grocery_store_shelf_in_Russia.jpg"
+  },
+  {
+    "id": "packaged-snacks",
+    "label": "Paketli kek ve atıştırmalık rafı",
+    "category": "Atıştırmalık",
+    "path": "data/samples/gallery/packaged_snacks.jpg",
+    "source_title": "Grocery store shelves of junk food",
+    "creator": "Cory Doctorow",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Grocery_store_shelves_of_junk_food.jpg"
+  },
+  {
+    "id": "baby-care",
+    "label": "Bebek bakım ürünleri rafı",
+    "category": "Kişisel bakım",
+    "path": "data/samples/gallery/baby_care.jpg",
+    "source_title": "Johnson's Baby Product Shelves at Kroger",
+    "creator": "ParentingPatch",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Johnson%27s_Baby_Product_Shelves_at_Kroger.JPG"
+  },
+  {
+    "id": "cheese-display",
+    "label": "Peynir ve şarküteri rafı",
+    "category": "Soğuk ürün",
+    "path": "data/samples/gallery/cheese_display.jpg",
+    "source_title": "Kaese-supermarkt",
+    "creator": "Ralf Roletschek (User:Marcela)",
+    "license": "CC BY 2.5",
+    "license_url": "https://creativecommons.org/licenses/by/2.5/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Kaese-supermarkt.jpg"
+  },
+  {
+    "id": "fizzy-drinks",
+    "label": "Gazlı içecek rafı — açılı görünüm",
+    "category": "İçecek",
+    "path": "data/samples/gallery/fizzy_drinks.jpg",
+    "source_title": "New World fizzy drinks",
+    "creator": "Panamitsu",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:New_World_fizzy_drinks.jpg"
+  },
+  {
+    "id": "pantry-products",
+    "label": "Kutu ve poşetli kiler ürünleri",
+    "category": "Paketli gıda",
+    "path": "data/samples/gallery/pantry_products.jpg",
+    "source_title": "Private label products in Swedish Hemköp store",
+    "creator": "Väsk",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Private_label_products_in_Swedish_Hemk%C3%B6p_store.jpg"
+  },
+  {
+    "id": "honey-syrup",
+    "label": "Bal ve şurup rafı",
+    "category": "Kavanoz ve şişe",
+    "path": "data/samples/gallery/honey_syrup.jpg",
+    "source_title": "Honey selection at supermarket",
+    "creator": "User:culinary123",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Honey_selection_at_supermarket.jpeg"
+  },
+  {
+    "id": "baby-wipes",
+    "label": "Bebek mendili rafı",
+    "category": "Kişisel bakım",
+    "path": "data/samples/gallery/baby_wipes.jpg",
+    "source_title": "Comfort and Pampers Baby Wipes",
+    "creator": "ParentingPatch",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Comfort_and_Pampers_Baby_Wipes.JPG"
+  },
+  {
+    "id": "crackers",
+    "label": "Kraker kutuları rafı",
+    "category": "Atıştırmalık",
+    "path": "data/samples/gallery/crackers.jpg",
+    "source_title": "Crackers trader Joe's grocery store United States",
+    "creator": "Kurt Kaiser",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Crackers_trader_Joe%27s_grocery_store_United_States.jpg"
+  },
+  {
+    "id": "water-jugs",
+    "label": "Su bidonları rafı",
+    "category": "İçecek",
+    "path": "data/samples/gallery/water_jugs.jpg",
+    "source_title": "Rows of gallons of drinking water and spring water on a supermarket shelf",
+    "creator": "MatthewHoobin",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Rows_of_gallons_of_drinking_water_and_spring_water_on_a_supermarket_shelf_in_Clearwater,_Florida,_US,_on_12_October_2022_(01).jpg"
+  },
+  {
+    "id": "wine-shelf",
+    "label": "Şarap şişeleri rafı",
+    "category": "İçecek",
+    "path": "data/samples/gallery/wine_shelf.jpg",
+    "source_title": "Alsatian wines in a supermarket",
+    "creator": "francois from Strasbourg, France",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Alsatian_wines_in_a_supermarket.jpg"
+  },
+  {
+    "id": "beer-display",
+    "label": "Bira teşhir rafı",
+    "category": "İçecek",
+    "path": "data/samples/gallery/beer_display.jpg",
+    "source_title": "Cervejas em Soure 01",
+    "creator": "Joehawkins",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Cervejas_em_Soure_01.jpg"
+  },
+  {
+    "id": "eggs",
+    "label": "Yumurta rafı",
+    "category": "Paketli gıda",
+    "path": "data/samples/gallery/eggs.jpg",
+    "source_title": "GroceryStoreEggs",
+    "creator": "Raysonho @ Open Grid Scheduler / Grid Engine",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:GroceryStoreEggs.JPG"
+  },
+  {
+    "id": "pet-food",
+    "label": "Evcil hayvan ürünleri rafı",
+    "category": "Evcil hayvan",
+    "path": "data/samples/gallery/pet_food.jpg",
+    "source_title": "REMA 1000 pet food and products",
+    "creator": "Wolfmann",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:REMA_1000_dyreartikler_dyremat_-_supermarket_grocery_store_interior_aisle_shelves_pet_food_-_T%C3%B8nsberg_Norway_2017-11-03.jpg"
+  },
+  {
+    "id": "cereal-and-muesli",
+    "label": "Mısır gevreği ve müsli rafı",
+    "category": "Paketli gıda",
+    "path": "data/samples/gallery/cereal_and_muesli.jpg",
+    "source_title": "SPAR cereal and muesli shelves, IMG 1092",
+    "creator": "Wolfmann",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:SPAR_kolonial_mat_varehandel_hyller_(Supermarket_interior_GROCERY_store_aisle_shelves)_Frokostblandinger_gryn_gr%C3%B8t_kjeks_m%C3%BCsli_Axa_(cereals_oatmeal_biscuits,_muesli)_etc_Tj%C3%B8me_NORWAY_2023-08-31_IMG_1092.jpg"
+  },
+  {
+    "id": "condiments",
+    "label": "Ketçap, hardal ve sos rafı",
+    "category": "Kavanoz ve şişe",
+    "path": "data/samples/gallery/condiments.jpg",
+    "source_title": "SPAR mustard, ketchup and sauce shelves, IMG 1088",
+    "creator": "Wolfmann",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://commons.wikimedia.org/wiki/File:SPAR_kolonial_mat_varehandel_hyller_(Supermarket_interior_GROCERY_store_aisle_shelves)_Marinade_sennep_ketsjup_Dijon_Idun_Heinz_(mustard_ketchup_chili_sauce)_etc_Tj%C3%B8me_NORWAY_2023-08-31_IMG_1088.jpg"
+  }
+]

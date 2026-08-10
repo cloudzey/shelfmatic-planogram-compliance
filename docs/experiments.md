@@ -148,10 +148,10 @@ f0a0028b0f7e6ce4b597d9b422b4fa6003c5a08aec194942e2a6aedab08d8304  best.pt
 
 ## Deployment sanity kontrolleri
 
-Kilitli deployment ayarlarıyla lisanslı market rafı örneğinde 149 ürün yüzü
-tespit edildi. Ortalama confidence `0.672987`, minimum confidence `0.331646`
-ve maksimum confidence `0.860646` oldu. Yazısız, yalnızca kutuları gösteren
-çıktı `docs/demo/yolo11s/` altında saklanır.
+Kilitli deployment ayarlarıyla önden çekilmiş lisanslı içecek rafı örneğinde
+49 ürün yüzü tespit edildi. Ortalama confidence `0.790237`, minimum confidence
+`0.334920` ve maksimum confidence `0.871103` oldu. Yazısız, yalnızca kutuları
+gösteren çıktı `docs/demo/yolo11s/` altında saklanır.
 
 Model ayrıca eğitim ve eşik seçiminde kullanılmayan, ürün içermeyen bir şehir
 sahnesinde out-of-distribution negatif kontrol olarak çalıştırıldı. Model bu
@@ -160,3 +160,11 @@ kutu üretti. Bu kontrol, eşik seçiminde kullanılan 20 hard-negative görünt
 `0` yanlış pozitif sonucunu değiştirmez; farklı sahne dağılımlarında genelleme
 sınırı bulunduğunu gösterir. Saha kullanımında raf-görüntüsü doğrulaması ve
 daha çeşitli background-only örneklerle ek değerlendirme önerilir.
+
+Streamlit demosu daha farklı kategori, ürün ölçeği ve kamera açılarını
+gösterebilmek için eğitim verisinden bağımsız 20 lisanslı Wikimedia Commons raf
+görseliyle genişletildi. Final deployment ayarlarıyla 20/20 dosyada inference
+tamamlandı ve toplam 1.641 kutu üretildi. Bu görseller ground-truth etiketli
+olmadığından sonuçlar performans metriği olarak yorumlanmamalıdır; nitel sanity
+kontrolü ve görsel başına tahmin özetleri
+[`gallery_sanity.md`](gallery_sanity.md) içinde kayıtlıdır.

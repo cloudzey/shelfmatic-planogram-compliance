@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import time
 from pathlib import Path
 from typing import Any
@@ -23,7 +24,7 @@ from src.inference_utils import (
 )
 
 
-SAMPLE_IMAGE = PROJECT_ROOT / "data" / "samples" / "supermarket_shelves.jpg"
+SAMPLE_GALLERY_MANIFEST = PROJECT_ROOT / "data" / "samples" / "gallery.json"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 
 
@@ -47,6 +48,38 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: model_file.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+@st.cache_data(show_spinner=False)
+def load_sample_gallery() -> list[dict[str, str]]:
+    """Load the attributed demo images and verify their local paths."""
+    with SAMPLE_GALLERY_MANIFEST.open(encoding="utf-8") as manifest_file:
+        gallery = json.load(manifest_file)
+
+    if not isinstance(gallery, list) or not gallery:
+        raise ValueError("Örnek görsel galerisi boş veya geçersiz.")
+
+    required_fields = {
+        "id",
+        "label",
+        "category",
+        "path",
+        "creator",
+        "license",
+        "license_url",
+        "source_url",
+    }
+    seen_ids: set[str] = set()
+    for sample in gallery:
+        if not isinstance(sample, dict) or not required_fields.issubset(sample):
+            raise ValueError("Örnek görsel galerisinde eksik alan var.")
+        if sample["id"] in seen_ids:
+            raise ValueError(f"Yinelenen örnek görsel kimliği: {sample['id']}")
+        seen_ids.add(sample["id"])
+        if not (PROJECT_ROOT / sample["path"]).is_file():
+            raise FileNotFoundError(f"Örnek görsel bulunamadı: {sample['path']}")
+
+    return gallery
 
 
 def analyze_image(
@@ -118,6 +151,11 @@ def main() -> None:
         st.stop()
 
     model_sha256 = sha256_file(model_path)
+    try:
+        sample_gallery = load_sample_gallery()
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        st.error(f"Örnek görsel galerisi yüklenemedi: {error}")
+        st.stop()
 
     st.title("Shelfmatic")
     st.caption("Raf fotoğraflarında YOLO11s ile ürün yüzü tespiti")
@@ -135,6 +173,19 @@ def main() -> None:
             "Görüntü kaynağı",
             ("Örnek raf fotoğrafı", "Kendi fotoğrafımı yükle"),
         )
+        selected_sample = None
+        if source_mode == "Örnek raf fotoğrafı":
+            sample_by_id = {sample["id"]: sample for sample in sample_gallery}
+            selected_sample_id = st.selectbox(
+                "Örnek görsel",
+                options=list(sample_by_id),
+                format_func=lambda sample_id: (
+                    f"{sample_by_id[sample_id]['label']} · "
+                    f"{sample_by_id[sample_id]['category']}"
+                ),
+            )
+            selected_sample = sample_by_id[selected_sample_id]
+            st.caption(f"{len(sample_gallery)} lisanslı raf örneği")
         show_details = st.checkbox(
             "Kutularda sınıf ve güven skorunu göster",
             value=False,
@@ -146,9 +197,11 @@ def main() -> None:
 
     uploaded_file = None
     image = None
-    filename = SAMPLE_IMAGE.name
+    filename = ""
     if source_mode == "Örnek raf fotoğrafı":
-        image = Image.open(SAMPLE_IMAGE).convert("RGB")
+        sample_path = PROJECT_ROOT / selected_sample["path"]
+        image = Image.open(sample_path).convert("RGB")
+        filename = sample_path.name
     else:
         uploaded_file = st.file_uploader(
             "Analiz edilecek raf fotoğrafını seç",
@@ -168,6 +221,13 @@ def main() -> None:
     preview_column, action_column = st.columns((3, 1), vertical_alignment="bottom")
     with preview_column:
         st.image(image, caption=f"Kaynak: {filename}", width="stretch")
+        if selected_sample is not None:
+            st.caption(
+                f"Fotoğraf: [{selected_sample['creator']}]"
+                f"({selected_sample['source_url']}) · "
+                f"Lisans: [{selected_sample['license']}]"
+                f"({selected_sample['license_url']})"
+            )
     with action_column:
         st.markdown("##### Analize hazır")
         st.write(f"{image.width} × {image.height} px")
