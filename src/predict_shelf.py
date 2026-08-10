@@ -35,11 +35,31 @@ def parse_args() -> argparse.Namespace:
         "--device",
         help="Optional Ultralytics device override such as cpu, 0 or mps.",
     )
+    parser.add_argument(
+        "--show-details",
+        action="store_true",
+        help="Show the class name and confidence above each box.",
+    )
+    parser.add_argument(
+        "--line-width",
+        type=int,
+        default=2,
+        help="Bounding-box line width. Defaults to 2 pixels.",
+    )
     return parser.parse_args()
 
 
 def resolve_path(path: Path) -> Path:
     return path.resolve() if path.is_absolute() else (PROJECT_ROOT / path).resolve()
+
+
+def display_path(path: Path) -> str:
+    """Prefer portable repository-relative paths in generated reports."""
+    resolved_path = path.resolve()
+    try:
+        return resolved_path.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return str(resolved_path)
 
 
 def load_config(path: Path) -> dict[str, Any]:
@@ -68,6 +88,13 @@ def main() -> int:
         raise FileNotFoundError(f"Inference source not found: {source}")
     if not model_path.is_file():
         raise FileNotFoundError(f"Selected model not found: {model_path}")
+    if output_directory.exists():
+        raise FileExistsError(
+            f"Output directory already exists: {output_directory}. "
+            "Choose a new --output path to avoid mixing prediction files."
+        )
+    if args.line_width < 1:
+        raise ValueError("Line width must be at least 1 pixel.")
 
     from ultralytics import YOLO
 
@@ -83,6 +110,9 @@ def main() -> int:
         "save": True,
         "save_txt": True,
         "save_conf": True,
+        "show_labels": args.show_details,
+        "show_conf": args.show_details,
+        "line_width": args.line_width,
         "project": str(output_directory.parent),
         "name": output_directory.name,
         "exist_ok": True,
@@ -91,17 +121,34 @@ def main() -> int:
         predict_args["device"] = args.device
 
     results = model.predict(**predict_args)
-    detections = [
-        {
-            "source": str(Path(result.path).resolve()),
-            "detections": 0 if result.boxes is None else len(result.boxes),
-        }
-        for result in results
-    ]
+    detections = []
+    for result in results:
+        confidences = (
+            []
+            if result.boxes is None
+            else [round(float(value), 6) for value in result.boxes.conf.cpu().tolist()]
+        )
+        detections.append(
+            {
+                "source": display_path(Path(result.path)),
+                "detections": len(confidences),
+                "average_confidence": (
+                    None
+                    if not confidences
+                    else round(sum(confidences) / len(confidences), 6)
+                ),
+                "minimum_confidence": None if not confidences else min(confidences),
+                "maximum_confidence": None if not confidences else max(confidences),
+            }
+        )
     summary = {
         "model": model_path.relative_to(PROJECT_ROOT).as_posix(),
         "model_family": config["model"]["family"],
         "settings": inference,
+        "visualization": {
+            "show_details": args.show_details,
+            "line_width": args.line_width,
+        },
         "processed_items": len(detections),
         "total_detections": sum(item["detections"] for item in detections),
         "items": detections,
