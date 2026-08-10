@@ -62,6 +62,46 @@ python src/predict_shelf.py data/samples/supermarket_shelves.jpg
 İşaretlenmiş görsel, YOLO etiketleri ve `prediction_summary.json` varsayılan
 olarak `outputs/final_predictions/` altına yazılır.
 
+Etiketlerin eski bir koşuyla karışmasını önlemek için çıktı klasörü zaten
+varsa komut durur. Yeni bir koşuda farklı bir `--output` yolu verilmelidir.
+
+Kutular varsayılan olarak sınıf ve confidence yazıları olmadan kaydedilir; bu,
+yoğun raflarda sonucu okunaklı tutar. Ayrıntıları kutuların üzerinde görmek için
+`--show-details` kullanılabilir:
+
+```bash
+python src/predict_shelf.py data/samples/supermarket_shelves.jpg --show-details
+```
+
+## İnteraktif demo
+
+Streamlit arayüzü örnek raf görselini veya yüklenen JPG/PNG dosyasını final
+YOLO11s modeliyle işler. Arayüz; kutulu sonucu, ürün sayısını, confidence
+özetini ve işlem süresini gösterir. İşaretlenmiş JPG ile ayrıntılı JSON ve CSV
+çıktıları indirilebilir.
+
+Kurulum ve çalıştırma:
+
+```bash
+python -m venv .venv
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Windows'ta sanal ortamı etkinleştirmek için kurulumdan sonra
+`.venv\Scripts\activate`, macOS/Linux'ta `source .venv/bin/activate`
+kullanılabilir. Arayüz final deployment ayarlarını (`imgsz=640`,
+`confidence=0.33`, `iou=0.70`) doğrudan `configs/deployment.yaml` dosyasından
+okur.
+
+Örnek raf görselinde kilitli ayarlarla üretilen temiz YOLO11s çıktısı:
+
+![YOLO11s temiz raf tespiti](docs/demo/yolo11s/supermarket_shelves.jpg)
+
+Bu örnekte model 149 ürün yüzü tespit etmiştir. Görsel yalnızca tek bir
+lisanslı demo kaynağıdır; teslim öncesinde gerçek saha fotoğraflarıyla ayrıca
+doğrulama yapılmalıdır.
+
 ## Test görseli kaynağı
 
 - “Supermarket shelves”, Frankie Fouganthin, Wikimedia Commons
