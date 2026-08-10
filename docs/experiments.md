@@ -145,3 +145,18 @@ SHA-256 değeri:
 ```text
 f0a0028b0f7e6ce4b597d9b422b4fa6003c5a08aec194942e2a6aedab08d8304  best.pt
 ```
+
+## Deployment sanity kontrolleri
+
+Kilitli deployment ayarlarıyla lisanslı market rafı örneğinde 149 ürün yüzü
+tespit edildi. Ortalama confidence `0.672987`, minimum confidence `0.331646`
+ve maksimum confidence `0.860646` oldu. Yazısız, yalnızca kutuları gösteren
+çıktı `docs/demo/yolo11s/` altında saklanır.
+
+Model ayrıca eğitim ve eşik seçiminde kullanılmayan, ürün içermeyen bir şehir
+sahnesinde out-of-distribution negatif kontrol olarak çalıştırıldı. Model bu
+görüntüde `0.458923` ve `0.333169` confidence değerleriyle iki yanlış pozitif
+kutu üretti. Bu kontrol, eşik seçiminde kullanılan 20 hard-negative görüntüdeki
+`0` yanlış pozitif sonucunu değiştirmez; farklı sahne dağılımlarında genelleme
+sınırı bulunduğunu gösterir. Saha kullanımında raf-görüntüsü doğrulaması ve
+daha çeşitli background-only örneklerle ek değerlendirme önerilir.
