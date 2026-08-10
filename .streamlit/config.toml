@@ -1,0 +1,11 @@
+[theme]
+primaryColor = "#B7F34A"
+backgroundColor = "#0D1117"
+secondaryBackgroundColor = "#171D27"
+textColor = "#F3F5F7"
+linkColor = "#B89CFF"
+baseRadius = "large"
+buttonRadius = "large"
+
+[server]
+maxUploadSize = 20

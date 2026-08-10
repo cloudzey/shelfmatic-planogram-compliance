@@ -1,0 +1,25 @@
+{
+  "model": "best.pt",
+  "model_family": "yolo11s",
+  "settings": {
+    "imgsz": 640,
+    "confidence": 0.33,
+    "iou": 0.7,
+    "max_det": 1000
+  },
+  "visualization": {
+    "show_details": false,
+    "line_width": 2
+  },
+  "processed_items": 1,
+  "total_detections": 149,
+  "items": [
+    {
+      "source": "data/samples/supermarket_shelves.jpg",
+      "detections": 149,
+      "average_confidence": 0.672987,
+      "minimum_confidence": 0.331646,
+      "maximum_confidence": 0.860646
+    }
+  ]
+}
