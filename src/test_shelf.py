@@ -4,7 +4,7 @@ from ultralytics import YOLO
 
 
 model_path = Path("models/yolo11n.pt")
-image_path = Path("data/samples/supermarket_shelves.jpg")
+image_path = Path("data/samples/legacy_supermarket_shelves.jpg")
 output_directory = Path("outputs/shelf_baseline")
 output_image = output_directory / "detected_shelf.jpg"
 

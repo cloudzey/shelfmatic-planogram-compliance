@@ -56,7 +56,7 @@ Kilitli `0.33` confidence eşiğiyle 300 görüntülük test bölümündeki sonu
 modelle çalıştırmak için:
 
 ```bash
-python src/predict_shelf.py data/samples/supermarket_shelves.jpg
+python src/predict_shelf.py data/samples/soft_drink_shelf.jpg
 ```
 
 İşaretlenmiş görsel, YOLO etiketleri ve `prediction_summary.json` varsayılan
@@ -70,7 +70,7 @@ yoğun raflarda sonucu okunaklı tutar. Ayrıntıları kutuların üzerinde gör
 `--show-details` kullanılabilir:
 
 ```bash
-python src/predict_shelf.py data/samples/supermarket_shelves.jpg --show-details
+python src/predict_shelf.py data/samples/soft_drink_shelf.jpg --show-details
 ```
 
 ## İnteraktif demo
@@ -96,17 +96,25 @@ okur.
 
 Örnek raf görselinde kilitli ayarlarla üretilen temiz YOLO11s çıktısı:
 
-![YOLO11s temiz raf tespiti](docs/demo/yolo11s/supermarket_shelves.jpg)
+![YOLO11s temiz raf tespiti](docs/demo/yolo11s/soft_drink_shelf.jpg)
 
-Bu örnekte model 149 ürün yüzü tespit etmiştir. Görsel yalnızca tek bir
-lisanslı demo kaynağıdır; teslim öncesinde gerçek saha fotoğraflarıyla ayrıca
-doğrulama yapılmalıdır.
+Bu örnekte model 49 ürün yüzü tespit etmiştir. Ortalama confidence `0.790237`,
+minimum confidence `0.334920` ve maksimum confidence `0.871103` olmuştur.
+Görsel yalnızca tek bir lisanslı demo kaynağıdır; teslim öncesinde gerçek saha
+fotoğraflarıyla ayrıca doğrulama yapılmalıdır.
 
-## Test görseli kaynağı
+## Görsel kaynakları
 
-- “Supermarket shelves”, Frankie Fouganthin, Wikimedia Commons
-- Lisans: CC BY-SA 4.0
-- Kaynak: https://commons.wikimedia.org/wiki/File:Supermarket_shelves.jpg
+- Güncel demo: “Soft drink shelf”, SMC, Wikimedia Commons
+  - Lisans: Public domain
+  - Kaynak: https://commons.wikimedia.org/wiki/File:Soft_drink_shelf.JPG
+- Tarihsel baseline: “Supermarket shelves”, Frankie Fouganthin, Wikimedia Commons
+  - Lisans: CC BY-SA 4.0
+  - Kaynak: https://commons.wikimedia.org/wiki/File:Supermarket_shelves.jpg
+
+Tarihsel baseline görseli, eski deneyin yeniden üretilebilmesi için
+`data/samples/legacy_supermarket_shelves.jpg` adıyla korunur. Streamlit demo ve
+final tahmin örneği daha önden çekilmiş `soft_drink_shelf.jpg` görselini kullanır.
 
 ## İlk baseline deneyi
 

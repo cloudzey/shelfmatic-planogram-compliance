@@ -23,7 +23,7 @@ from src.inference_utils import (
 )
 
 
-SAMPLE_IMAGE = PROJECT_ROOT / "data" / "samples" / "supermarket_shelves.jpg"
+SAMPLE_IMAGE = PROJECT_ROOT / "data" / "samples" / "soft_drink_shelf.jpg"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 
 
