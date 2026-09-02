@@ -35,6 +35,8 @@ def extract_detections(result: Any) -> list[dict[str, Any]]:
     if boxes is None or len(boxes) == 0:
         return []
 
+    image_height, image_width = result.orig_shape[:2]
+
     coordinates = boxes.xyxy.detach().cpu().tolist()
     confidences = boxes.conf.detach().cpu().tolist()
     class_ids = boxes.cls.detach().cpu().tolist()
@@ -45,22 +47,44 @@ def extract_detections(result: Any) -> list[dict[str, Any]]:
         zip(coordinates, confidences, class_ids, strict=True),
         start=1,
     ):
-        x1, y1, x2, y2 = (round(float(value), 2) for value in xyxy)
+        x1, y1, x2, y2 = (float(value) for value in xyxy)
+
+        width = x2 - x1
+        height = y2 - y1
+        center_x = (x1 + x2) / 2
+        center_y = (y1 + y2) / 2
+
         numeric_class_id = int(class_id)
+
         records.append(
             {
                 "id": index,
                 "class_id": numeric_class_id,
                 "class_name": str(names[numeric_class_id]),
                 "confidence": round(float(confidence), 6),
-                "x1": x1,
-                "y1": y1,
-                "x2": x2,
-                "y2": y2,
-                "width": round(x2 - x1, 2),
-                "height": round(y2 - y1, 2),
+
+                "x1": round(x1, 2),
+                "y1": round(y1, 2),
+                "x2": round(x2, 2),
+                "y2": round(y2, 2),
+
+                "center_x": round(center_x, 2),
+                "center_y": round(center_y, 2),
+                "width": round(width, 2),
+                "height": round(height, 2),
+
+                "x1_norm": round(x1 / image_width, 6),
+                "y1_norm": round(y1 / image_height, 6),
+                "x2_norm": round(x2 / image_width, 6),
+                "y2_norm": round(y2 / image_height, 6),
+
+                "center_x_norm": round(center_x / image_width, 6),
+                "center_y_norm": round(center_y / image_height, 6),
+                "width_norm": round(width / image_width, 6),
+                "height_norm": round(height / image_height, 6),
             }
         )
+
     return records
 
 
@@ -90,17 +114,27 @@ def report_to_json_bytes(report: dict[str, Any]) -> bytes:
 def detections_to_csv_bytes(detections: list[dict[str, Any]]) -> bytes:
     """Encode detection records as a UTF-8 CSV with a stable header."""
     fieldnames = [
-        "id",
-        "class_id",
-        "class_name",
-        "confidence",
-        "x1",
-        "y1",
-        "x2",
-        "y2",
-        "width",
-        "height",
-    ]
+    "id",
+    "class_id",
+    "class_name",
+    "confidence",
+    "x1",
+    "y1",
+    "x2",
+    "y2",
+    "center_x",
+    "center_y",
+    "width",
+    "height",
+    "x1_norm",
+    "y1_norm",
+    "x2_norm",
+    "y2_norm",
+    "center_x_norm",
+    "center_y_norm",
+    "width_norm",
+    "height_norm",
+]
     buffer = io.StringIO(newline="")
     writer = csv.DictWriter(buffer, fieldnames=fieldnames)
     writer.writeheader()
