@@ -182,7 +182,6 @@ def analyze_image(
             show_details=show_details,
         ),
         "report": report,
-        "json_bytes": report_to_json_bytes(report),
         "csv_bytes": detections_to_csv_bytes(detections),
     }
 
@@ -332,7 +331,7 @@ def main() -> None:
 
     st.divider()
     st.subheader("Analiz sonucu")
-    result_metrics =st.columns(5)
+    result_metrics = st.columns(5)
 
     result_metrics[0].metric(
         "Tespit edilen ürün",
@@ -476,11 +475,18 @@ def main() -> None:
 
     with st.expander("Tespit ayrıntıları"):
         if report["detections"]:
-            st.dataframe(report["detections"], width="stretch", hide_index=True)
+            st.dataframe(
+                report["detections"],
+                width="stretch",
+                hide_index=True,
+            )
         else:
-            st.info("Bu görüntüde deployment eşiğini geçen ürün tespiti yok.")
+            st.info(
+                "Bu görüntüde deployment eşiğini geçen "
+                "ürün tespiti yok."
+            )
 
-        st.info(
+    st.info(
         "Planogram karşılaştırması raf satırı ve ürün yüzü sayıları "
         "üzerinden yapısal olarak gerçekleştirilir. Model SKU veya "
         "marka kimliği tahmin etmez.",
