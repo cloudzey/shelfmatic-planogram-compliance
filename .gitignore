@@ -1,2 +1,36 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
-*
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+/Include/
+/Lib/
+/Scripts/
+/share/
+/pyvenv.cfg
+
+# Training outputs
+runs/
+wandb/
+
+# Editors and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local settings and logs
+.env
+*.log
+
+# Local datasets, models and generated outputs
+/bus.jpg
+/data/raw/
+/data/processed/
+/models/
+/outputs/
