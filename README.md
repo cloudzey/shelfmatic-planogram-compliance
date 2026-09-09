@@ -14,7 +14,7 @@ Bu proje, raf görüntülerindeki ürünlerin görüntü işleme ve nesne tespit
 
 hedeflenmektedir.
 
-İlerleyen aşamalarda tespit edilen raf düzeninin hedef planogramla karşılaştırılması planlanmaktadır.
+Tespit edilen ürünler raf satırlarına ayrılır, soldan sağa sıralanır ve kullanıcı tarafından girilen hedef ürün yüzü sayılarıyla karşılaştırılır. Sistem satır bazında eksik ve fazla ürün yüzlerini belirleyerek yapısal planogram uyumluluk yüzdesi üretir.
 
 ## Kullanılacak teknolojiler
 
@@ -107,6 +107,24 @@ olmuştur. Galerideki 20 görselin tamamı final ayarlarla çalıştırılmış 
 Galerideki görseller ground-truth etiketli olmadığı için bu çalışma bir
 doğruluk metriği değil deployment sanity kontrolüdür. Teslim öncesinde gerçek
 saha fotoğraflarıyla ayrıca doğrulama yapılmalıdır.
+
+### Yapısal planogram karşılaştırması
+
+Kullanıcı, hedef planogramdaki ürün yüzü sayılarını üst raftan alt
+rafa doğru virgülle ayrılmış biçimde girer (`15,16,17` gibi). Sistem
+tespit edilen raf satırlarını hedef değerlerle karşılaştırarak:
+
+- genel uyumluluk yüzdesini,
+- eksik ürün yüzü sayısını,
+- fazla ürün yüzü sayısını,
+- her raf satırının durumunu
+
+hesaplar. Uyumluluk skoru, eşleşen ürün yüzü sayısının her satır için
+beklenen ve tespit edilen değerlerin büyüğünün toplamına oranıdır.
+
+Final model tek bir genel ürün sınıfı kullandığı için bu karşılaştırma
+SKU veya marka kimliği yerine raf yapısı ve ürün yüzü sayıları
+üzerinden gerçekleştirilir.
 
 ## Görsel kaynakları
 
