@@ -7,7 +7,6 @@ import json
 import time
 from pathlib import Path
 from typing import Any
-from unittest import result
 
 import numpy as np
 import streamlit as st
@@ -22,6 +21,11 @@ from src.inference_utils import (
     load_deployment_config,
     render_result,
     report_to_json_bytes,
+)
+
+from src.planogram_compliance import (
+    compare_planogram,
+    parse_expected_facings,
 )
 
 from src.shelf_layout import build_shelf_layout
@@ -241,6 +245,16 @@ def main() -> None:
             value=False,
             help="Yoğun raflarda daha okunaklı olması için varsayılan olarak kapalıdır.",
         )
+        st.subheader("Hedef planogram")
+        expected_facings_text = st.text_input(
+            "Satır başına beklenen ürün sayısı",
+            value="",
+            placeholder="Örn. 15,16,17",
+            help=(
+                "Üst raftan alt rafa doğru beklenen "
+                "ürün yüzü sayılarını virgülle ayır."
+            ),
+        )
         st.divider()
         st.caption(f"Checkpoint: `{model_sha256[:12]}…`")
         st.caption("Desteklenen dosyalar: JPG, JPEG, PNG · En fazla 20 MB")
@@ -352,6 +366,82 @@ def main() -> None:
         icon="ℹ️",
         )
 
+    compliance = None
+
+    if expected_facings_text.strip():
+        try:
+            expected_facings = parse_expected_facings(
+                expected_facings_text
+            )
+            compliance = compare_planogram(
+                report["shelf_layout"],
+                expected_facings,
+            )
+        except ValueError as error:
+            st.error(f"Hedef planogram geçersiz: {error}")
+
+    export_report = dict(report)
+
+    if compliance is not None:
+        export_report["planogram_compliance"] = compliance
+
+        st.markdown("##### Planogram uyumluluğu")
+
+        compliance_metrics = st.columns(4)
+        compliance_metrics[0].metric(
+            "Uyumluluk",
+            f"{compliance['compliance_percent']:.1f}%",
+        )
+        compliance_metrics[1].metric(
+            "Beklenen ürün yüzü",
+            compliance["expected_facing_count"],
+        )
+        compliance_metrics[2].metric(
+            "Eksik ürün yüzü",
+            compliance["missing_facing_count"],
+        )
+        compliance_metrics[3].metric(
+            "Fazla ürün yüzü",
+            compliance["extra_facing_count"],
+        )
+
+        if compliance["is_compliant"]:
+            st.success(
+                "Raf yapısı hedef planogramla uyumlu.",
+                icon="✅",
+            )
+        else:
+            st.warning(
+                "Raf yapısında hedef planograma göre "
+                "farklılıklar bulundu.",
+                icon="⚠️",
+            )
+
+        status_labels = {
+            "compliant": "Uyumlu",
+            "missing_facings": "Eksik ürün",
+            "extra_facings": "Fazla ürün",
+            "missing_row": "Eksik raf",
+            "unexpected_row": "Beklenmeyen raf",
+        }
+
+        comparison_rows = [
+            {
+                "Raf": row["row_index"],
+                "Beklenen": row["expected_facings"],
+                "Tespit edilen": row["detected_facings"],
+                "Fark": row["difference"],
+                "Durum": status_labels[row["status"]],
+            }
+            for row in compliance["rows"]
+        ]
+
+        st.dataframe(
+            comparison_rows,
+            width="stretch",
+            hide_index=True,
+        )
+
     original_column, result_column = st.columns(2)
     with original_column:
         st.markdown("##### Orijinal")
@@ -371,7 +461,7 @@ def main() -> None:
     )
     download_columns[1].download_button(
         "JSON raporu indir",
-        data=analysis["json_bytes"],
+        data=report_to_json_bytes(export_report),
         file_name=f"{stem}_detections.json",
         mime="application/json",
         width="stretch",
@@ -390,12 +480,12 @@ def main() -> None:
         else:
             st.info("Bu görüntüde deployment eşiğini geçen ürün tespiti yok.")
 
-    st.warning(
-    "Bu aşamada ürün yüzleri tespit edilir ve raf satırlarına "
-    "soldan sağa sıralanır. SKU kimliği ve planogram uyumluluk "
-    "yüzdesi sonraki geliştirme aşamasıdır.",
-    icon="ℹ️",
-)
+        st.info(
+        "Planogram karşılaştırması raf satırı ve ürün yüzü sayıları "
+        "üzerinden yapısal olarak gerçekleştirilir. Model SKU veya "
+        "marka kimliği tahmin etmez.",
+        icon="ℹ️",
+    )
 
 
 if __name__ == "__main__":
