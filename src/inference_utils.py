@@ -115,6 +115,10 @@ def detections_to_csv_bytes(detections: list[dict[str, Any]]) -> bytes:
     """Encode detection records as a UTF-8 CSV with a stable header."""
     fieldnames = [
     "id",
+    "row_index",
+    "position_index",
+    "slot_id",
+    "layout_status",
     "class_id",
     "class_name",
     "confidence",
