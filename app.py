@@ -7,6 +7,7 @@ import json
 import time
 from pathlib import Path
 from typing import Any
+from unittest import result
 
 import numpy as np
 import streamlit as st
@@ -22,6 +23,8 @@ from src.inference_utils import (
     render_result,
     report_to_json_bytes,
 )
+
+from src.shelf_layout import build_shelf_layout
 
 
 SAMPLE_GALLERY_MANIFEST = PROJECT_ROOT / "data" / "samples" / "gallery.json"
@@ -102,18 +105,60 @@ def analyze_image(
     )[0]
     elapsed_ms = (time.perf_counter() - started_at) * 1000
 
-    detections = extract_detections(result)
+    raw_detections = extract_detections(result)
+    shelf_layout = build_shelf_layout(raw_detections)
+
+    detections = [
+        detection
+        for row in shelf_layout["rows"]
+        for detection in row["detections"]
+    ]
+
+    detections.extend(shelf_layout["unassigned_detections"])
+
     confidences = [item["confidence"] for item in detections]
+
+    shelf_layout_report = {
+        "row_count": shelf_layout["row_count"],
+        "row_tolerance": shelf_layout["row_tolerance"],
+        "min_detections_per_row": shelf_layout["min_detections_per_row"],
+        "unassigned_count": shelf_layout["unassigned_count"],
+        "rows": [
+            {
+                "row_index": row["row_index"],
+                "center_y_norm": row["center_y_norm"],
+                "top_y_norm": row["top_y_norm"],
+                "bottom_y_norm": row["bottom_y_norm"],
+                "detection_count": row["detection_count"],
+                "slot_ids": [
+                    detection["slot_id"]
+                    for detection in row["detections"]
+                ],
+            }
+            for row in shelf_layout["rows"]
+        ],
+    }
+
     summary = {
         "detection_count": len(detections),
+        "shelf_row_count": shelf_layout["row_count"],
+        "review_required_count": shelf_layout["unassigned_count"],
         "average_confidence": (
-            None if not confidences else round(sum(confidences) / len(confidences), 6)
+            None
+            if not confidences
+            else round(sum(confidences) / len(confidences), 6)
         ),
-        "minimum_confidence": None if not confidences else min(confidences),
-        "maximum_confidence": None if not confidences else max(confidences),
+        "minimum_confidence": (
+            None if not confidences else min(confidences)
+        ),
+        "maximum_confidence": (
+            None if not confidences else max(confidences)
+        ),
         "elapsed_ms": round(elapsed_ms, 2),
     }
+
     report = {
+        "schema_version": 1,
         "model": "YOLO11s",
         "model_sha256": model_sha256,
         "settings": inference,
@@ -123,10 +168,15 @@ def analyze_image(
             "height": image.height,
         },
         "summary": summary,
+        "shelf_layout": shelf_layout_report,
         "detections": detections,
     }
+
     return {
-        "annotated_image": render_result(result, show_details=show_details),
+        "annotated_image": render_result(
+            result,
+            show_details=show_details,
+        ),
         "report": report,
         "json_bytes": report_to_json_bytes(report),
         "csv_bytes": detections_to_csv_bytes(detections),
@@ -268,21 +318,39 @@ def main() -> None:
 
     st.divider()
     st.subheader("Analiz sonucu")
-    result_metrics = st.columns(4)
-    result_metrics[0].metric("Tespit edilen ürün", summary["detection_count"])
+    result_metrics =st.columns(5)
+
+    result_metrics[0].metric(
+        "Tespit edilen ürün",
+        summary["detection_count"],
+    )
     result_metrics[1].metric(
+        "Raf satırı",
+        summary["shelf_row_count"],
+    )
+    result_metrics[2].metric(
         "Ortalama güven",
         "—"
         if summary["average_confidence"] is None
         else f"{summary['average_confidence'] * 100:.1f}%",
     )
-    result_metrics[2].metric(
+    result_metrics[3].metric(
         "En yüksek güven",
         "—"
         if summary["maximum_confidence"] is None
         else f"{summary['maximum_confidence'] * 100:.1f}%",
     )
-    result_metrics[3].metric("Toplam işlem", f"{summary['elapsed_ms']:.0f} ms")
+    result_metrics[4].metric(
+        "Toplam işlem", 
+        f"{summary['elapsed_ms']:.0f} ms",
+        )
+
+    if summary["review_required_count"] > 0:
+        st.info(
+        f"{summary['review_required_count']} tespit raf satırlarına "
+        "güvenli biçimde atanamadığı için insan kontrolüne ayrıldı.",
+        icon="ℹ️",
+        )
 
     original_column, result_column = st.columns(2)
     with original_column:
@@ -323,10 +391,11 @@ def main() -> None:
             st.info("Bu görüntüde deployment eşiğini geçen ürün tespiti yok.")
 
     st.warning(
-        "Bu PoC ürün yüzlerini tespit eder. SKU kimliği, raf sırası ve planogram "
-        "uyumluluk yüzdesi bir sonraki geliştirme aşamasıdır.",
-        icon="ℹ️",
-    )
+    "Bu aşamada ürün yüzleri tespit edilir ve raf satırlarına "
+    "soldan sağa sıralanır. SKU kimliği ve planogram uyumluluk "
+    "yüzdesi sonraki geliştirme aşamasıdır.",
+    icon="ℹ️",
+)
 
 
 if __name__ == "__main__":
